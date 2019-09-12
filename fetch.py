@@ -4,7 +4,7 @@ import time
 
 def fetchSource(vocab):
 	# Grab word from user and fetch site source
-	headers = {'User-Agent': 'Mozilla/5.0'}
+	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'}
 	source = requests.get('https://www.weblio.jp/content/' + vocab, headers=headers)
 	time.sleep(2)
 	# Check response
@@ -13,21 +13,28 @@ def fetchSource(vocab):
 		print("Error fetching HTML.")
 		return ConnectionAbortedError
 
-	print(source.text)
 	soup = BeautifulSoup(source.text, 'lxml')
 
 	# Find definitions part of website source
-	results1 = soup.find_all('div', attrs={'class':'NetDicBody'})
+	results = soup.find_all('a', attrs={'class':'crosslink'})
 
 	# Final string
 	resString = ""
-
 	# Grab each definition and concatenate
-	for i in range(0, len(results1)):
-	  resString += results1[i].text
+	rtemp = ""
+	for r in results:
+		if rtemp == r.parent.text:
+			continue
+		resString += r.parent.text
+		rtemp = r.parent.text
+
 
 	# Strip ends of whitespace
 	resString = resString.strip()
+
+	print("/*------------------")
+	print(resString)
+	print("-------------------*/")
 
 	if(len(resString) < 1):
 		print("No definition found.")
@@ -39,7 +46,7 @@ def fetchSource(vocab):
 	definitions = list()
 
 	for i in range(0, len(resString)):
-		# 9312 = '①''; If one is present, there are multiple definitions
+		# 9312 = circled numbers; If one is present, there are multiple definitions
 		if resString.count(chr(9312)) > 0:
 			# Check for subsequent number symbols and add a string to the list for each definition
 			if ord(resString[i]) >= 9312 and ord(resString[i]) <= 9331:
