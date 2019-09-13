@@ -4,7 +4,7 @@ import time
 
 def fetchSource(vocab):
 	# Grab word from user and fetch site source
-	headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101 Firefox/68.0'}
+	headers = {'User-Agent': 'Mozilla/5.0 | github.com/rekkuso'}
 	source = requests.get('https://www.weblio.jp/content/' + vocab, headers=headers)
 	time.sleep(2)
 	# Check response
@@ -16,7 +16,7 @@ def fetchSource(vocab):
 	soup = BeautifulSoup(source.text, 'lxml')
 
 	# Find definitions part of website source
-	results = soup.find_all('a', attrs={'class':'crosslink'})
+	results = soup.find_all('div', attrs={'class':'kiji'})
 
 	# Final string
 	resString = ""
@@ -32,13 +32,13 @@ def fetchSource(vocab):
 	# Strip ends of whitespace
 	resString = resString.strip()
 
-	print("/*------------------")
-	print(resString)
-	print("-------------------*/")
+	#print("/*------------------")
+	#print(resString)
+	#print("-------------------*/")
 
 	if(len(resString) < 1):
 		print("No definition found.")
-		return ConnectionError
+		return ConnectionAbortedError
 
 	# Buffer for definition separation
 	buf = ""
