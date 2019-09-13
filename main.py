@@ -11,6 +11,10 @@ if __name__ == "__main__":
         for vocab in vocabfile:
             # Returns string/list of definitions for each word in the list (+debug print)
             result = fetch.getDefinition(vocab)
+            if result == (-2) or result == (-1):
+                result = list()
+                result.append(vocab)
+                result.append("Error finding definition")
             print(result)
 
             # CSV Export

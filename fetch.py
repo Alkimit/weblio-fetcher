@@ -6,13 +6,13 @@ def getDefinition(vocab):
 	# Grab word from user and fetch site source
 	headers = {'User-Agent': 'Mozilla/5.0 | github.com/rekkuso'}
 	source = requests.get('https://www.weblio.jp/content/' + vocab.strip(), headers=headers)
-	time.sleep(2)
+	time.sleep(1.5)
 
 	# Check response
 	print("Return code: " + str(source.status_code))
 	if(source.status_code != 200 or source.text == ""):
 		print("Error fetching HTML.")
-		return ConnectionAbortedError
+		return -1
 
 	# ~soup~
 	soup = BeautifulSoup(source.text, 'lxml')
@@ -25,7 +25,9 @@ def getDefinition(vocab):
 	final = list()
 	final.append(vocab)
 	final[0] = final[0].rstrip()
-
+	if len(results) < 1:
+		print("Error finding definition for " + vocab)
+		return -2
 	# Separate multiple definitions; WIP
 	# Char 9312 = circled number; if one is present, its a multi-def.
 	if results[0].text.strip().count(chr(9312)) > 0:
