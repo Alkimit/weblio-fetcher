@@ -22,12 +22,12 @@ def getDefinition(vocab):
 
 	# Create final result list and start with word itself;
 	# The final list will have the word in front and its definitions afterwards
-	final = list()
-	final.append(vocab)
-	final[0] = final[0].rstrip()
 	if len(results) < 1:
 		print("Error finding definition for " + vocab)
+		print("Retrying..")
 		return -2
+	final = list()
+	
 	# Separate multiple definitions; WIP
 	# Char 9312 = circled number; if one is present, its a multi-def.
 	if results[0].text.strip().count(chr(9312)) > 0:

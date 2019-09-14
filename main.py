@@ -1,4 +1,5 @@
-import fetch
+import weblio_fetch
+import tatoeba_fetch
 import csv
 
 if __name__ == "__main__":
@@ -10,12 +11,21 @@ if __name__ == "__main__":
         test_writer = csv.writer(test_file, dialect='excel', escapechar=' ', quoting=csv.QUOTE_NONE)
         for vocab in vocabfile:
             # Returns string/list of definitions for each word in the list (+debug print)
-            result = fetch.getDefinition(vocab)
-            if result == (-2) or result == (-1):
-                result = list()
-                result.append(vocab)
-                result.append("Error finding definition")
-            print(result)
+            weblio_result = weblio_fetch.getDefinition(vocab)
+            if weblio_result == (-1) or weblio_result == (-2):
+                weblio_result = list()
+                weblio_result.append("Error finding definition")
+                
+            # TODO: Retry definition search due to randomization
+            #elif weblio_result == (-2):
+
+            tatoeba_result = tatoeba_fetch.getSentence(vocab)
+
+            result = list()
+            result.append(tatoeba_result)
+            result.extend(weblio_result)
+            #debug
+            print(weblio_result)
 
             # CSV Export
             test_writer.writerow(result)

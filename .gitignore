@@ -1,2 +1,9 @@
 partest.py
 \partest.py
+fetch.pyc
+test_output.csv
+__pycache__/weblio_fetch.cpython-37.pyc
+__pycache__/tatoeba_fetch.cpython-37.pyc
+__pycache__/fetch.cpython-37.pyc
+.vscode/settings.json
+.vscode/launch.json
